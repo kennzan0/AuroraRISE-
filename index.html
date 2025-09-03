@@ -1243,33 +1243,81 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Accurate visitor counter using API
-        function updateVisitorCount() {
-            // Using a free visitor counter API
-            // You can replace this with your own backend service
-            const apiUrl = 'https://api.countapi.xyz/hit/aurorarise.com/visits';
-            
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('visitorCount').textContent = data.value;
-                })
-                .catch(error => {
-                    // Fallback to localStorage if API fails
-                    console.log('API failed, using localStorage fallback');
-                    let count = localStorage.getItem('visitorCount');
-                    if (!count) {
-                        count = Math.floor(Math.random() * 1000) + 1000;
-                        localStorage.setItem('visitorCount', count);
-                    } else {
-                        count = parseInt(count) + 1;
-                        localStorage.setItem('visitorCount', count);
-                    }
-                    document.getElementById('visitorCount').textContent = count;
-                });
-        }
+// Accurate visitor counter using API with real-time updates and formatting
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return "+1jt"; // Maksimal tampilan "+1jt" untuk angka di atas 1 juta
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'; // Format ribuan dengan "K"
+    }
+    return num.toString(); // Tampilkan angka asli untuk di bawah 1000
+}
 
+function updateVisitorCount() {
+    const apiUrl = 'https://api.countapi.xyz/hit/aurorarise.com/visits';
+    
+    fetch(apiUrl)  
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })  
+        .then(data => {  
+            const count = data.value;
+            const formattedCount = formatNumber(count);
+            
+            // Update semua elemen dengan ID visitorCount
+            document.querySelectorAll('#visitorCount').forEach(element => {
+                element.textContent = formattedCount;
+            });
+            
+            // Simpan timestamp terakhir update
+            localStorage.setItem('lastVisitorUpdate', Date.now());
+        })  
+        .catch(error => {  
+            console.error('API failed:', error);
+            
+            // Coba ambil dari cache jika ada
+            const lastCount = localStorage.getItem('lastVisitorCount');
+            const lastUpdate = localStorage.getItem('lastVisitorUpdate');
+            
+            if (lastCount && lastUpdate && (Date.now() - parseInt(lastUpdate) < 300000)) {
+                // Gunakan cache jika masih valid (kurang dari 5 menit)
+                document.querySelectorAll('#visitorCount').forEach(element => {
+                    element.textContent = formatNumber(parseInt(lastCount));
+                });
+            } else {
+                // Fallback ke pesan error jika tidak ada cache yang valid
+                document.querySelectorAll('#visitorCount').forEach(element => {
+                    element.textContent = "Offline";
+                });
+            }
+        });  
+}
+
+// Fungsi untuk real-time update
+function startRealTimeUpdates() {
+    // Update pertama kali
+    updateVisitorCount();
+    
+    // Set interval untuk update setiap 30 detik
+    setInterval(updateVisitorCount, 30000);
+}
+
+// Mulai real-time updates saat halaman dimuat
+document.addEventListener('DOMContentLoaded', startRealTimeUpdates);
+
+// Simpan count terakhir untuk cache
+function saveLastCount(count) {
+    localStorage.setItem('lastVisitorCount', count);
+}
+
+// Tambahkan event listener untuk visibility change
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        // Update saat tab kembali aktif
         updateVisitorCount();
+    }
+});
 
         // Create particles (optimized)
         function createParticles() {
