@@ -41,7 +41,7 @@
             width: 0px;
             background: transparent;
         }
-
+        
         /* Loading screen */
         .loading-screen {
             position: fixed;
@@ -82,6 +82,20 @@
             border-radius: 2px;
             animation: loading 2s ease-in-out forwards;
         }
+        
+.loading-extra {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    color: #ff0050;
+    text-shadow: 0 0 10px #ff0050, 0 0 20px #ff0050;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;  /* 👉 fade in/out 0.3 detik */
+}
 
         @keyframes loading {
             to {
@@ -145,25 +159,167 @@
             text-shadow: 0 0 20px #ff0050;
             text-align: center;
             animation: pulse-red 1s ease-in-out infinite;
+            
         }
+        
+        /* === LED Digital Text – Border Merah Sederhana === */
+        
+.led-container {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: 80px;
+    margin: 5px auto;   /* ⬅ auto kiri-kanan = center */
+    padding: 15px;
+    background-color: #111;
+    border-radius: 4px;
+    border: 2px solid #ff0000;
+    overflow: hidden;
+    z-index: 50;
+}
 
-        /* Digital Clock */
-        .digital-clock {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(10, 25, 47, 0.7);
-            border: 1px solid #00d9ff;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            color: #00d9ff;
-            text-shadow: 0 0 10px #00d9ff;
-            z-index: 100;
-            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
-        }
+.led-screen {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    /* tetap ada grid pattern tipis */
+    background-image:
+        linear-gradient(rgba(80, 80, 80, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80, 80, 80, 0.3) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
 
+.led-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    color: #0ff;                        /* teks neon biru */
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow:
+        0 0 3px #0ff,
+        0 0 6px #0ff,
+        0 0 9px #0080ff;
+    animation: moveText 20s linear infinite;
+    animation-delay: 1s;
+    opacity: 0;
+    padding-right: 50px;
+}
+
+@keyframes moveText {
+    0%   { transform: translateX(100%) translateY(-50%); opacity: 0; }
+    1%   { opacity: 1; }
+    99%  { opacity: 1; }
+    100% { transform: translateX(-100%) translateY(-50%); opacity: 0; }
+}
+
+/* === Responsif === */
+@media (max-width: 768px) {
+    .led-container {
+        width: 95%;
+        height: 60px;
+        padding: 10px;
+        border-width: 1.5px;           /* border sedikit lebih tipis di tablet/ponsel */
+    }
+    .led-text {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+    .led-screen {
+        background-size: 15px 15px;
+    }
+}
+@media (max-width: 480px) {
+    .led-container {
+        width: 98%;
+        height: 50px;
+        padding: 8px;
+        border-width: 1.5px;
+    }
+    .led-text {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+    }
+    .led-screen {
+        background-size: 10px 10px;
+    }
+}
+        
+            /* === Tambahan No Effect === */
+.effect-toggle {
+    position: relative;         /* ⬅️ ubah dari fixed */
+    margin-left: 12px;          /* jarak horizontal dari tombol Light/Dark */
+    padding: 10px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #ff0050;
+    background: rgba(0,0,0,0.4);
+    border: 2px solid #ff0050;
+    border-radius: 10px;
+    cursor: pointer;
+    text-shadow: 0 0 6px #ff0050;
+    backdrop-filter: blur(6px);
+    transition: color 0.3s, border-color 0.3s, text-shadow 0.3s, background 0.3s;
+    
+}
+.effect-toggle.on {
+    color: #00d9ff;
+    border-color: #00d9ff;
+    text-shadow: 0 0 6px #00d9ff;
+    
+}
+
+    /* ==== Transisi khusus untuk judul AuroraRISE™ ==== */
+.aurora-text,
+.trademark {
+    /* pastikan selalu ada transition agar 2-arah (on/off) mulus */
+    transition: text-shadow 0.6s ease, filter 0.6s ease, color 0.6s ease;
+}
+
+/* Matikan animasi glitch saat no-effect supaya transisi tidak terganggu */
+body.no-effect .aurora-text.glitch {
+    animation: none !important;
+}
+
+/* Hilangkan glow teks AuroraRISE™ secara halus */
+body.no-effect .aurora-text,
+body.no-effect .trademark {
+    text-shadow: none !important;
+    filter: none !important;
+    
+}
+
+body.no-effect .image-container,
+body.no-effect .leaderboard-container,
+body.no-effect .text-container,
+body.no-effect .cyberpunk-quote,
+body.no-effect .grid-bg,
+body.no-effect .cyberpunk-bg .building {
+    box-shadow: none !important;
+    background: rgba(0,0,0,0.2) !important;
+    transition: all 0.6s ease;
+}
+body.no-effect .particle,
+body.no-effect .window {
+    opacity: 0 !important;
+    transition: opacity 0.6s ease;
+    
+}
+
+/* Saat mode no-effect aktif: hilangkan glow */
+body.no-effect * {
+    text-shadow: none !important;
+    filter: none !important;
+    transition: text-shadow 0.6s ease, filter 0.6s ease;
+    
+}
+        
         /* Cyberpunk particles */
         .particles-container {
             position: fixed;
@@ -315,62 +471,65 @@
         }
 
         /* Banner with image and blur effect */
-        .header-banner {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
+.header-banner {
+    position: relative;
+    width: 100%;
+    height: 250px;      /* atau gunakan vh jika ingin lebih responsif */
+    overflow: hidden;
+    background: #000;   /* fallback */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .banner-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+.aurora-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
 
-        .banner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(255, 0, 80, 0.2));
-            z-index: 1;
-        }
+/* Gradasi pudar ke bawah */
+.banner-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 85%,
+    rgba(0,0,0,0.3) 92%,
+    var(--bg-color, #0a192f) 100%
+);
+    pointer-events: none;
+    z-index: 1;
+}
 
-        .header-banner::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to bottom, transparent, rgba(0, 217, 255, 0.3));
-            filter: blur(15px);
-            z-index: 2;
-        }
+.header-banner h1 {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+}
 
-        .header h1 {
-            font-family: 'Audiowide', cursive;
-            font-size: 3rem;
-            letter-spacing: 3px;
-            padding: 15px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-            white-space: nowrap;
+/* Efek fade saat ganti video */
+.fade-video {
+    transition: opacity 1.2s ease-in-out;
+}
+.fade-video.fading {
+    opacity: 0;
+    
         }
-
+        
+        
         .aurora-text {
             color: #00d9ff;
             text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff;
             animation: glow 1.5s ease-in-out infinite alternate;
+        
         }
 
         .trademark {
@@ -664,8 +823,22 @@
 .leaderboard-table th, 
 .leaderboard-table td {
     padding: 12px;
-    text-align: center;
+    text-align: center;       /* horizontal center */
+    vertical-align: middle;   /* vertical center */
     border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+    
+}
+
+/* Bikin kolom MEMBER (kolom ke-2) bener-bener center */
+.leaderboard-table td:nth-child(2),
+.leaderboard-table th:nth-child(2) {
+    text-align: center;
+}
+
+.leaderboard-table td:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .leaderboard-table th {
@@ -675,108 +848,38 @@
 }
 
 .leaderboard-table tr:hover {
-    background: rgba(0, 217, 255, 0.1);
-    box-shadow: inset 0 0 10px rgba(0, 217, 255, 0.5);
-    transition: all 0.3s ease;
+    background: none !important;
+    box-shadow: none !important;
+    transition: none !important;
 }
 
-        /* Message Form */
-        .message-form {
-            background: rgba(15, 52, 96, 0.3);
-            border: 1px solid #00d9ff;
-            border-radius: 5px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
-        }
+/* Efek klik satu baris */
+.leaderboard-table tr.clicked td {
+    color: #ff0033;
+    text-shadow: 0 0 8px #ff0033, 0 0 20px #ff0033, 0 0 35px #ff1a4d;
+    transition: color 0.5s ease, text-shadow 0.5s ease;
+    
+}
+/* teks update mingguan */
+     .leaderboard-update {
+    font-family: 'Audiowide', cursive;
+    font-size: 1rem;             /* standar, tidak terlalu besar */
+    color: #ff0050;              /* merah neon */
+    text-align: center;          /* posisinya tengah */
+    margin-top: 12px;            /* beri jarak dari tabel */
+    text-shadow: 0 0 8px #ff0050;
+    
+     }
 
-        .message-form h3 {
-            font-family: 'Audiowide', cursive;
-            font-size: 1.5rem;
-            color: #00d9ff;
-            text-shadow: 0 0 10px #00d9ff;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #00d9ff;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            background: rgba(10, 25, 47, 0.7);
-            border: 1px solid #00d9ff;
-            border-radius: 3px;
-            color: #e0e0e0;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
-        }
-
-        .whatsapp-type {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .radio-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .radio-group input[type="radio"] {
-            width: auto;
-            margin: 0;
-        }
-
-        .radio-group label {
-            margin: 0;
-            cursor: pointer;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #00d9ff, #ff0050);
-            border: none;
-            border-radius: 3px;
-            padding: 10px 20px;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.5);
-        }
-
-        .info-text {
-            font-size: 0.8rem;
-            color: #ff0050;
-            text-align: center;
-            margin-top: 10px;
-            opacity: 0.8;
+/* Update text untuk Leaderboard Followers */
+.leaderboard-followers-update {
+    font-family: 'Audiowide', cursive;
+    font-size: 1rem;
+    color: #ff0050;
+    text-align: center;
+    margin-top: 12px;
+    text-shadow: 0 0 8px #ff0050;
+    
         }
 
         /* Footer */
@@ -889,19 +992,41 @@
             }
 
             .announcement-text {
-                font-size: 1.4rem;
-            }
-
-            .digital-clock {
-                font-size: 1rem;
-                padding: 8px 12px;
+                font-size: 1.4rem
             }
             
-            /* Leaderboard Responsive */
+            /* Leaderboard chat Responsive */
     .leaderboard-title {
         font-size: 1.2rem;
     }
 
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 8px;
+        font-size: 0.85rem;
+        
+    }
+    /* Responsive update text Leaderboard Followers */
+    .leaderboard-followers-update {
+        font-size: 0.8rem;
+        margin-top: 8px;
+        
+    }
+    
+        .leaderboard-update {
+    font-family: 'Audiowide', cursive;
+    font-size: 1rem;
+    color: #ff0050;
+    text-align: center;
+    margin-top: 12px;
+    text-shadow: 0 0 8px #ff0050;
+    
+    }
+    
+              /* Leaderboard followers Responsive */  
+        .leaderboard-title {
+        font-size: 1.2rem;
+    }
     .leaderboard-table th,
     .leaderboard-table td {
         padding: 8px;
@@ -911,13 +1036,9 @@
             .-counter {
                 font-size: 0.8rem;
                 padding: 8px 12px;
+            
             }
-
-            .whatsapp-type {
-                flex-direction: column;
-                gap: 10px;
-            }
-
+            
             .social-links {
                 flex-direction: column;
                 gap: 15px;
@@ -931,14 +1052,120 @@
             .no-internet-text,
             .internet-lost-text {
                 font-size: 1.5rem;
+                
             }
-        }
+            /* === Variabel Warna === */
+:root {
+    --bg-color: #0a192f;          /* dark background */
+    --text-color: #e0e0e0;        /* dark text */
+    --panel-bg: rgba(15,52,96,0.3);
+}
+
+body.light-mode {
+    --bg-color: #ffffff;            /* latar belakang putih penuh */
+    --text-color: #1a1a1a;          /* teks gelap */
+    --panel-bg: #ffffff;            /* panel solid putih, bukan 0.6 */
+    
+}
+
+/* Terapkan ke elemen utama */
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.6s ease, color 0.6s ease;
+}
+
+/* Panel dan container mengikuti variabel */
+.text-container,
+.leaderboard-container,
+.cyberpunk-quote {
+    background: var(--panel-bg);
+    transition: background 0.6s ease, color 0.6s ease;
+}
+
+/* === Tombol Toggle Cyberpunk === */
+.cyber-toggle {
+    position: relative;      /* atau default: static */
+    display: inline-block;   /* biar tetap rapih */
+    margin: 20px auto;       /* tengah horizontal */
+    top: auto;
+    right: auto;
+    z-index: 2000;
+    padding: 10px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #00d9ff;
+    background: rgba(0,0,0,0.4);
+    border: 2px solid #00d9ff;
+    border-radius: 10px;
+    cursor: pointer;
+    text-shadow: 0 0 6px #00d9ff;
+    backdrop-filter: blur(6px);
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+    
+        /* Default = Dark Mode  → tombol biru */
+    color: #00d9ff;
+    border-color: #00d9ff;
+    text-shadow: 0 0 6px #00d9ff;
+    transition: color 0.3s, border-color 0.3s, text-shadow 0.3s;
+}
+
+/* Saat Light Mode aktif  → tombol merah */
+body.light-mode .cyber-toggle {
+    color: #ff0050;
+    border-color: #ff0050;
+    text-shadow: 0 0 6px #ff0050;
+    
+    .theme-toggle-container {
+    text-align: center;   /* tombol tetap di tengah */
+    margin: 20px 0;
+    
+}
+
+.cyber-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,217,255,0.25), transparent);
+    transition: left 0.5s;
+}
+
+.cyber-toggle:hover::before {
+    left: 100%;
+}
+
+.cyber-toggle:hover {
+    color: #ff0050;
+    border-color: #ff0050;
+    text-shadow: 0 0 6px #ff0050;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .cyber-toggle {
+        top: 15px;
+        right: 15px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    body.light-mode {
+        --bg-color: #fafafa;
+        --text-color: #1a1a1a;
+      }
+    }
     </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-text" id="loadingText">INITIALIZING AURORARISE™</div>
+        
+    <!--  Teks khusus loading merah -->
+    <div class="loading-extra" id="loadingExtra">loading...</div>
+        
         <div class="loading-bar">
             <div class="loading-progress" id="loadingProgress"></div>
         </div>
@@ -953,10 +1180,7 @@
     <div class="internet-lost-overlay" id="internetLostOverlay">
         <div class="internet-lost-text">Hubungi ke internet mu sekarang</div>
     </div>
-
-    <!-- Digital Clock -->
-    <div class="digital-clock" id="digitalClock">00:00:00</div>
-
+    
     <!-- Particles Container -->
     <div class="particles-container" id="particlesContainer"></div>
 
@@ -1022,14 +1246,40 @@
         </div>
     </div>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="header-banner">
-            <img src="https://files.catbox.moe/5toe4x.png" alt="Banner Image" class="banner-image" id="bannerImage">
-            <div class="banner-overlay"></div>
-            <h1><span class="aurora-text glitch" data-text="AuroraRISE™">AuroraRISE<span class="trademark">™</span></span></h1>
+<div class="header">
+  <div class="header-banner">
+      <!-- Video aurora (satu elemen saja) -->
+      <video id="auroraVideo" preload="auto" autoplay muted loop playsinline class="aurora-video fade-video">
+          <source src="https://files.catbox.moe/qlwc6b.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+      </video>
+
+      <!-- Overlay gradasi agar bawah pudar -->
+      <div class="banner-fade"></div>
+
+      <!-- Teks AuroraRISE™ -->
+      <h1>
+        <span class="aurora-text glitch" data-text="AuroraRISE™">
+          AuroraRISE<span class="trademark">™</span>
+        </span>
+      </h1>
+  </div>
+</div>
+
+    <!-- teks digital -->
+    <div class="led-container">
+        <div class="led-screen">
+            <div class="led-text">Join the Aurora RISE™ Revolution – Be Part of the Future!</div>
         </div>
     </div>
+    
+<!-- Tombol Toggle Theme -->
+<div class="theme-toggle-container">
+   <button id="themeToggle" class="cyber-toggle">Light Mode</button>
+
+   <!-- <<< Tombol no effect >>> -->
+   <button id="effectToggle" class="effect-toggle">effect</button>
+</div>
 
     <!-- Main Content -->
     <div class="container">
@@ -1058,12 +1308,11 @@
             <p>8. No membully</p>
             <p>9. No sider</p>
             <p>10. No toxic</p>
-            <p>LINK SELEKSI SCROLL KE BAWAH</p>
         </div>
         
                 <!-- Leaderboard Chat Member -->
 <div class="leaderboard-container">
-    <h3 class="leaderboard-title">Leaderboard Chat</h3>
+    <h3 class="leaderboard-title">Leaderboard Chat `𝐀𝐔𝐑𝐎𝐑𝐀 酷</h3>
     <table class="leaderboard-table">
         <tr>
             <th>RANK</th>
@@ -1096,53 +1345,67 @@
             <td>373</td>
         </tr>
     </table>
+    <!--teks update every week -->
+    <p class="leaderboard-update">Update every week </p>
 </div>
 
-        <!-- Message Form -->
-        <div class="message-form">
-            <h3>Message Owner</h3>
-            <form id="messageForm">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Your WhatsApp Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="6281234567890" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>WhatsApp Type</label>
-                    <div class="whatsapp-type">
-                        <div class="radio-group">
-                            <input type="radio" id="wa-business" name="waType" value="business" checked>
-                            <label for="wa-business">WhatsApp Business</label>
-                        </div>
-                        <div class="radio-group">
-                            <input type="radio" id="wa-original" name="waType" value="original">
-                            <label for="wa-original">WhatsApp Original</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="4" required></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">Send Message</button>
-                <p class="info-text">Message will be sent using your WhatsApp number</p>
-            </form>
-        </div>
-    </div>
+<!-- Deskripsi tambahan di bawah Leaderboard Chat -->
+<div class="text-container">
+    <p>Bagaimana cara menambahkan Score Chat?</p>
+    <p>Score chat dapat bertambah dengan cara aktif berpartisipasi dan ikut serta dalam percakapan pada grup utama masing-masing sesuai versi grup yang digunakan.</p>
+</div>
+
+<!-- Leaderboard Followers -->
+<div class="leaderboard-container">
+    <h3 class="leaderboard-title">Leaderboard Followers `𝐀𝐔𝐑𝐎𝐑𝐀 酷</h3>
+    <table class="leaderboard-table">
+        <tr>
+            <th>RANK</th>
+            <th>MEMBER</th>
+            <th>FOLLOWERS</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>𝗜𝗼𝗙𝗜 `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>16.1K</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Lord`oyen `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>6.409</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>-𝙊𝙘𝙘|BA Edit `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>1.762</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>-𝙊𝙘𝙘|HC Edit `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>1.761</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Yuutori'Raa `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>1.301</td>
+        </tr>
+    </table>
+        <!--teks update every month -->
+    <p class="leaderboard-update">Update every mooth</p>
+</div>
+
+<!-- Deskripsi tambahan di bawah Leaderboard followers -->
+<div class="text-container">
+    <p>Bagaimana cara menambahkan Followers tiktok?</p>
+    <p>Untuk meningkatkan jumlah followers, setiap anggota disarankan untuk secara  konsisten membuat konten yang menarik dan relevan dengan minat audiens,  dan menggunakan hastag marga AuroraRISE. #margaaurorarise</p>
+</div>
 
     <!-- Footer -->
     <div class="footer">
         <div class="social-links">
-            <a href="https://chat.whatsapp.com/Bo36SF3Yvvo5qgaI5UZFzy" target="_blank" class="social-link whatsapp">
+            <a href="https://chat.whatsapp.com/CeCGOaLXiOq98aOBDGFlb2?mode=ems_copy_c" target="_blank" class="social-link whatsapp">
                 <i class="fab fa-whatsapp"></i>
-                WhatsApp Selection
+                Joined AuroraRISE™
             </a>
             <a href="https://www.tiktok.com/@aurorariseofficia?_t=ZS-8zNvxtdXvUa&_r=1" target="_blank" class="social-link tiktok">
                 <i class="fab fa-tiktok"></i>
@@ -1150,7 +1413,7 @@
             </a>
         </div>
         <div class="copyright" id="copyright">
-            ©KennZan
+            ©KennZan `𝐀𝐔𝐑𝐎𝐑𝐀 酷
         </div>
     </div>
 
@@ -1294,20 +1557,7 @@
                 }
             }, 3000);
         });
-
-        // Digital clock
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-
+        
         // Create particles (optimized)
         function createParticles() {
             const particlesContainer = document.getElementById('particlesContainer');
@@ -1367,44 +1617,6 @@
             document.getElementById('copyright').addEventListener('click', function() {
                 window.open('https://www.tiktok.com/@kennzan0?_t=ZS-8zNzDLWLr3F&_r=1', '_blank');
             });
-
-            // Message form
-            document.getElementById('messageForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('name').value;
-                const phone = document.getElementById('phone').value;
-                const message = document.getElementById('message').value;
-                const waType = document.querySelector('input[name="waType"]:checked').value;
-                
-                // Format phone number
-                let formattedPhone = phone;
-                if (!formattedPhone.startsWith('62') && formattedPhone.startsWith('0')) {
-                    formattedPhone = '62' + formattedPhone.substring(1);
-                } else if (!formattedPhone.startsWith('62') && !formattedPhone.startsWith('0')) {
-                    formattedPhone = '62' + formattedPhone;
-                }
-                
-                // Create message
-                const fullMessage = `Halo, nama saya ${name}. ${message}`;
-                const encodedMessage = encodeURIComponent(fullMessage);
-                
-                // Create WhatsApp URL based on type
-                let whatsappURL;
-                if (waType === 'business') {
-                    // WhatsApp Business API format
-                    whatsappURL = `https://wa.me/${6287710348394}?text=${encodedMessage}`;
-                } else {
-                    // WhatsApp Original format
-                    whatsappURL = `https://api.whatsapp.com/send?phone=${6287710348394}&text=${encodedMessage}`;
-                }
-                
-                // Open WhatsApp
-                window.open(whatsappURL, '_blank');
-                
-                // Reset form
-                this.reset();
-            });
         });
 
         // Add glitch effect randomly (optimized)
@@ -1417,6 +1629,110 @@
                 }, 200);
             }
         }, 5000);
-    </script>
-</body>
-</html>
+        
+        document.addEventListener("DOMContentLoaded", () => {
+    const loadingScreen = document.getElementById("loadingScreen");
+
+    // Setelah 3 detik, sembunyikan loading screen
+    setTimeout(() => {
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => {
+            loadingScreen.style.display = "none";
+        }, 500); // waktu transisi fade out
+    }, 3000);
+});
+
+//  Leaderboard Chat Click Effect
+function initLeaderboardClickEffect() {
+    const rows = document.querySelectorAll(".leaderboard-table tr");
+
+    rows.forEach(row => {
+        row.addEventListener("click", () => {
+            // Kalau baris ini sudah aktif, klik lagi = nonaktifkan
+            if (row.classList.contains("clicked")) {
+                row.classList.remove("clicked");
+                return;
+            }
+
+            // Hapus clicked dari semua row
+            rows.forEach(r => r.classList.remove("clicked"));
+
+            // Tambahin clicked cuma ke row yang diklik
+            row.classList.add("clicked");
+        });
+        
+        // efek kedip //
+        document.addEventListener('DOMContentLoaded', () => {
+  const loadingExtra = document.getElementById('loadingExtra');
+  let visible = true;
+
+  const blinkInterval = setInterval(() => {
+    // stop ketika layar loading sudah hilang
+    const screen = document.getElementById('loadingScreen');
+    if (!screen || screen.style.display === 'none') {
+      clearInterval(blinkInterval);
+      return;
+    }
+
+    visible = !visible;
+    loadingExtra.style.opacity = visible ? '1' : '0';
+  }, 350); // ganti 500 untuk kecepatan kedip (ms)
+});
+        
+    });
+}
+
+initLeaderboardClickEffect();
+
+// toggel dark/light + no effect
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn   = document.getElementById('themeToggle');
+  const body        = document.body;
+  const auroraVideo = document.getElementById('auroraVideo');
+  const sourceEl    = auroraVideo.querySelector('source');
+
+  const darkSrc  = "https://files.catbox.moe/qlwc6b.mp4";
+  const lightSrc = "https://files.catbox.moe/0zt1v8.mp4";
+
+  function switchVideo(src) {
+      auroraVideo.classList.add('fading');
+      setTimeout(() => {
+          sourceEl.src = src;
+          auroraVideo.load();
+          auroraVideo.addEventListener('canplay', function handlePlay() {
+              auroraVideo.removeEventListener('canplay', handlePlay);
+              auroraVideo.play();
+              auroraVideo.classList.remove('fading');
+          }, { once: true });
+      }, 600);
+  }
+
+  toggleBtn.addEventListener('click', () => {
+      const isLight = body.classList.toggle('light-mode');
+      toggleBtn.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+      switchVideo(isLight ? lightSrc : darkSrc);
+  });
+
+  // Pastikan video awal langsung autoplay & loop
+  auroraVideo.play().catch(() => {});
+
+  // === No Effect ===
+  const effectBtn = document.getElementById('effectToggle');
+  effectBtn.addEventListener('click', () => {
+      const active = body.classList.toggle('no-effect');
+      effectBtn.classList.toggle('on', active);
+      effectBtn.textContent = active ? 'no effect' : 'effect';
+  });
+  
+          // Menambahkan jeda 1 detik sebelum animasi dimulai
+        document.addEventListener('DOMContentLoaded', function() {
+            const ledText = document.querySelector('.led-text');
+            ledText.style.animationPlayState = 'paused';
+            
+            setTimeout(() => {
+                ledText.style.animationPlayState = 'running';
+            }, 1000);
+        });
+  
+});
+</script>
