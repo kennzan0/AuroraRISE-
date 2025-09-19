@@ -162,6 +162,380 @@
             
         }
         
+        /* === Back to Top Cyberpunk === */
+.back-to-top {
+    position: fixed;
+    right: 90;
+    bottom: 30px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+}
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Default arrow & glitch anim */
+.back-to-top::before {
+    content: '>>>';
+    color: #ff0040;
+    font-size: 40px;
+    font-weight: bold;
+    transform: rotate(-90deg);
+    text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+    animation: backtop-glitch 5s infinite;
+    transition: transform 0.2s ease, text-shadow 0.2s ease;
+}
+
+.back-to-top:hover::before {
+    transform: rotate(-90deg) scale(1.2);
+    text-shadow: 0 0 15px #ff0040, 0 0 25px #ff0040, 0 0 35px #ff0040;
+}
+
+/* === Animasi Glitch === */
+@keyframes backtop-glitch {
+    0%,100% {
+        text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+        transform: rotate(-90deg);
+    }
+    5% {
+        text-shadow: -2px 0 #00f0ff, 2px 0 #ff0040;
+        transform: rotate(-90deg) translateX(-2px);
+    }
+    10% {
+        text-shadow: 2px 0 #ff0040, -2px 0 #00f0ff;
+        transform: rotate(-90deg) translateX(2px);
+    }
+    25% {
+        text-shadow: 0 0 15px #ff0040, 0 0 25px #ff0040;
+    }
+    65% {
+        text-shadow: -3px 0 #00f0ff, 3px 0 #ff0040;
+        transform: rotate(-90deg) translateX(-3px);
+    }
+    75% {
+        text-shadow: 3px 0 #ff0040, -3px 0 #00f0ff;
+        transform: rotate(-90deg) translateX(3px);
+    }
+}
+
+/* === Animasi klik (ledakan neon) === */
+@keyframes backtop-click {
+    0%   { transform: rotate(-90deg) scale(1); text-shadow: 0 0 10px #ff0040; }
+    20%  { transform: rotate(-90deg) scale(1.4); text-shadow: 0 0 30px #ff0040, 0 0 40px #00f0ff; }
+    40%  { transform: rotate(-90deg) scale(0.7); text-shadow: 0 0 50px #ff0040, 0 0 60px #00f0ff; }
+    60%  { transform: rotate(-90deg) scale(1.2); text-shadow: 0 0 35px #ff0040, 0 0 45px #00f0ff; }
+    100% { transform: rotate(-90deg) scale(1);   text-shadow: 0 0 10px #ff0040; }
+}
+
+.back-to-top:active::before {
+    animation: backtop-click 0.8s ease;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .back-to-top {
+        width: 80px;
+        height: 80px;
+        right: 20px;
+        bottom: 20px;
+    }
+    .back-to-top::before { font-size: 34px; }
+}
+
+@media (max-width: 480px) {
+    .back-to-top {
+        width: 70px;
+        height: 70px;
+        right: 15px;
+        bottom: 15px;
+    }
+    .back-to-top::before { font-size: 28px; }
+}
+        
+        /* report bug */
+                .report-container {
+            position: fixed;
+            left: 30px;
+            bottom: 0;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        
+        .report-button {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ff3366;
+            border-radius: 4px;
+            padding: 15px 25px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 
+                0 0 0 1px rgba(128, 128, 128, 0.3),
+                0 0 0 2px rgba(64, 64, 64, 0.2),
+                0 5px 15px rgba(32, 32, 32, 0.5),
+                0 8px 20px rgba(16, 16, 16, 0.3),
+                inset 0 0 15px rgba(128, 128, 128, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+        }
+        
+        /* Circuit Animation */
+        .report-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, transparent 97%, #ff3366 97%),
+                linear-gradient(0deg, transparent 97%, #ff3366 97%);
+            background-size: 10px 10px;
+            background-position: 0 0, 0 0;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .circuit-line {
+            position: absolute;
+            background-color: rgba(255, 51, 102, 0.7);
+            z-index: 1;
+        }
+        
+        .circuit-line:nth-child(1) {
+            top: 20%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            animation: circuitMove1 4s infinite linear;
+        }
+        
+        .circuit-line:nth-child(2) {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            animation: circuitMove2 4s infinite linear;
+        }
+        
+        .circuit-line:nth-child(3) {
+            top: 80%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            animation: circuitMove3 4s infinite linear;
+        }
+        
+        .circuit-line:nth-child(4) {
+            top: 0;
+            left: 20%;
+            width: 1px;
+            height: 100%;
+            animation: circuitMove4 5s infinite linear;
+        }
+        
+        .circuit-line:nth-child(5) {
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            animation: circuitMove5 5s infinite linear;
+        }
+        
+        .circuit-line:nth-child(6) {
+            top: 0;
+            left: 80%;
+            width: 1px;
+            height: 100%;
+            animation: circuitMove6 5s infinite linear;
+        }
+        
+        @keyframes circuitMove1 {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes circuitMove2 {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes circuitMove3 {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes circuitMove4 {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        
+        @keyframes circuitMove5 {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        
+        @keyframes circuitMove6 {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        
+        .report-button:hover::before {
+            opacity: 0.5;
+        }
+        
+        .report-button:hover .circuit-line {
+            animation-duration: 2s;
+        }
+        
+        .report-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 0 1px rgba(128, 128, 128, 0.4),
+                0 0 0 2px rgba(64, 64, 64, 0.3),
+                0 8px 20px rgba(32, 32, 32, 0.7),
+                0 12px 30px rgba(16, 16, 16, 0.5),
+                inset 0 0 20px rgba(128, 128, 128, 0.3);
+            border-color: #ff6699;
+        }
+        
+        .report-button:active {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 0 0 1px rgba(128, 128, 128, 0.3),
+                0 0 0 2px rgba(64, 64, 64, 0.2),
+                0 3px 10px rgba(32, 32, 32, 0.4),
+                0 5px 15px rgba(16, 16, 16, 0.3),
+                inset 0 0 15px rgba(128, 128, 128, 0.2);
+        }
+        
+        .report-title {
+            color: #ff3366;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.7);
+            position: relative;
+            z-index: 3;
+        }
+        
+        .report-subtitle {
+            color: #888;
+            font-size: 10px;
+            font-weight: 400;
+            margin: 5px 0 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* Click Animation */
+        .click-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 51, 102, 0.7);
+            transform: translate(-50%, -50%);
+            animation: clickAnimation 0.8s ease-out forwards;
+            z-index: 4;
+        }
+        
+        @keyframes clickAnimation {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                box-shadow: 
+                    0 0 0 0 rgba(255, 51, 102, 0.7),
+                    0 0 0 0 rgba(255, 51, 102, 0.5),
+                    0 0 0 0 rgba(255, 51, 102, 0.3);
+            }
+            50% {
+                width: 120px;
+                height: 120px;
+                opacity: 0.8;
+                box-shadow: 
+                    0 0 20px 10px rgba(255, 51, 102, 0.5),
+                    0 0 40px 20px rgba(255, 51, 102, 0.3),
+                    0 0 60px 30px rgba(255, 51, 102, 0.1);
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+                box-shadow: 
+                    0 0 30px 15px rgba(255, 51, 102, 0.3),
+                    0 0 60px 30px rgba(255, 51, 102, 0.1),
+                    0 0 90px 45px rgba(255, 51, 102, 0);
+            }
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .report-container {
+                left: 15px;
+            }
+            
+            .report-button {
+                padding: 12px 20px;
+            }
+            
+            .report-title {
+                font-size: 16px;
+            }
+            
+            .report-subtitle {
+                font-size: 9px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .report-container {
+                left: 10px;
+            }
+            
+            .report-button {
+                padding: 10px 15px;
+            }
+            
+            .report-title {
+                font-size: 14px;
+                letter-spacing: 1px;
+            }
+            
+            .report-subtitle {
+                font-size: 8px;
+            }
+        
+        }
         /* === LED Digital Text – Border Merah Sederhana === */
         
 .led-container {
@@ -1266,6 +1640,23 @@ body.light-mode .cyber-toggle {
   </div>
 </div>
 
+<!-- back to top -->
+<div class="back-to-top" id="backToTop"></div>
+
+<!-- report button -->
+    <div class="report-container">
+        <a href="#" id="reportLink" class="report-button">
+            <div class="circuit-line"></div>
+            <div class="circuit-line"></div>
+            <div class="circuit-line"></div>
+            <div class="circuit-line"></div>
+            <div class="circuit-line"></div>
+            <div class="circuit-line"></div>
+            <p class="report-title">Submit Report</p>
+            <p class="report-subtitle">System Error</p>
+        </a>
+    </div>
+
     <!-- teks digital -->
     <div class="led-container">
         <div class="led-screen">
@@ -1308,6 +1699,132 @@ body.light-mode .cyber-toggle {
             <p>8. No membully</p>
             <p>9. No sider</p>
             <p>10. No toxic</p>
+        </div>
+     
+        <!-- information -->
+        <div class="announcement">
+            <div class="announcement-text">Data Center</div>
+        </div>
+        
+<!-- Leaderboard 𝐓𝐡𝐞 𝐇𝐢𝐝𝐫𝐞𝐫𝐜𝐡𝐲 -->
+<div class="leaderboard-container">
+    <h3 class="leaderboard-title">The Hidrerchy `𝐀𝐔𝐑𝐎𝐑𝐀 酷</h3>
+    <table class="leaderboard-table">
+        <tr>
+            <th>NAME</th>
+            <th>ROLE</th>
+        </tr>
+        <tr>
+            <td>KeenZan?`𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>Founder/Owner</td>
+        </tr>
+        <tr>
+            <td>Aoi `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>Co-owner</td>
+        </tr>
+        <tr>
+            <td>Lipz `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>Admin</td>
+        </tr>
+        <tr>
+            <td>Kyar `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>Moderator</td>
+        </tr>
+        <tr>
+            <td>Hiro `𝐀𝐔𝐑𝐎𝐑𝐀 酷</td>
+            <td>Support</td>
+        </tr>
+    </table>
+    <!--teks update every week -->
+    <p class="leaderboard-update">Update every week </p>
+</div>
+
+<!-- Deskripsi tambahan di bawah Leaderboard Chat -->
+<div class="text-container">
+    <p>Apa itu The Hidrerchy?`𝐀𝐔𝐑𝐎𝐑𝐀 酷?</p>
+    <p>The Hierarchy adalah susunan peringkat dalam komunitas yang membantu membedakan tugas dan tanggung jawab antaranggota.</p>
+</div>
+        
+        <!-- Leaderboard patnership -->
+<div class="leaderboard-container">
+    <h3 class="leaderboard-title">List PartnerShip `𝐀𝐔𝐑𝐎𝐑𝐀 酷</h3>
+    <table class="leaderboard-table">
+        <tr>
+            <th>CODE</th>
+            <th>NAME</th>
+            <th>TIME STAMP</th>
+        </tr>
+        <tr>
+            <td>1.30.08.25</td>
+            <td>Shiina Family</td>
+            <td>30-08-25</td>
+        </tr>
+        <tr>
+            <td>2.30.08.25</td>
+            <td>Anime Creator Society</td>
+            <td>30-08-25</td>
+        </tr>
+            <td>3.30.08.25</td>
+            <td>Creator Elite Society</td>
+            <td>30-08-25</td>
+        </tr>
+            <td>4.30.08.25</td>
+            <td>Velda Familia</td>
+            <td>30-08-25</td>
+        </tr>
+            <td>5.01.09.25</td>
+            <td>Loli Hunter</td>
+            <td>01-09-25</td>
+        </tr>
+            <td>6.02.09.25</td>
+            <td>Anime Creator Club</td>
+            <td>02-09-25</td>
+        </tr>
+            <td>7.03.09.25</td>
+            <td>Cavguard</td>
+            <td>03-09-25</td>
+        </tr>
+            <td>8.04.09.25</td>
+            <td>Tensura</td>
+            <td>04-09-25</td>
+        </tr>
+            <td>9.05.09.25</td>
+            <td>Nanime Manga Creator</td>
+            <td>05-09-25</td>
+        </tr>
+            <td>10.08.09.25</td>
+            <td>Next Your Creator</td>
+            <td>08-09-25</td>
+        </tr>
+            <td>11.12.09.25</td>
+            <td>Clas Creator Anime</td>
+            <td>12-09-25</td>
+        </tr>
+            <td>12.14.09.25</td>
+            <td>Areaa Genster</td>
+            <td>14-09-25</td>
+        </tr>
+            <td>13.14.09.25</td>
+            <td>Creator Anime Association</td>
+            <td>14-09-25</td>
+        </tr>
+            <td>14.16.09.25</td>
+            <td>Sprint Honor Origin</td>
+            <td>16-09-25</td>
+        </tr>
+   </table>
+    <p class="leaderboard-update">Update every week</p>
+</div>
+
+<!-- Deskripsi tambahan di bawah Leaderboard Chat -->
+<div class="text-container">
+    <p>Bagaimana nama marga mu masuk List PatnerShip `𝐀𝐔𝐑𝐎𝐑𝐀 酷?</p>
+    <p>Berdiskusi dengan KennZan lewat pesan pribadi tiktok @kennzan0</p>
+</div>
+
+        <!-- Top Rank -->
+        <div class="announcement">
+            <div class="announcement-text">Top Rank</div>
         </div>
         
                 <!-- Leaderboard Chat Member -->
@@ -1391,7 +1908,7 @@ body.light-mode .cyber-toggle {
         </tr>
     </table>
         <!--teks update every month -->
-    <p class="leaderboard-update">Update every mooth</p>
+    <p class="leaderboard-update">Update every month</p>
 </div>
 
 <!-- Deskripsi tambahan di bawah Leaderboard followers -->
@@ -1733,6 +2250,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 ledText.style.animationPlayState = 'running';
             }, 1000);
         });
-  
+        
+        // report button //
+          document.getElementById('reportLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Create click effect
+            const clickEffect = document.createElement('div');
+            clickEffect.className = 'click-effect';
+            this.appendChild(clickEffect);
+            
+            // Remove effect after animation completes
+            setTimeout(() => {
+                clickEffect.remove();
+            }, 800);
+            
+            // Redirect to WhatsApp after animation completes (850ms to ensure animation is fully finished)
+            setTimeout(() => {
+                window.open('https://wa.me/6287710348394?text=Ell,%20ada%20bug%20web%20nih', '_blank');
+            }, 850);
+        });
+        
+        // === Back to Top ===
+const backToTopButton = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('visible');
+    } else {
+        backToTopButton.classList.remove('visible');
+    }
+});
+
+backToTopButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 });
 </script>
+</body>
+</html>
