@@ -536,6 +536,68 @@
             }
         
         }
+        
+        /* scroll indikator */
+.aurora-scroll-container {
+  position: fixed;
+  top: var(--indicator-top);
+  right: 20px;
+  width: 12px;
+  height: clamp(180px, 45vh, 320px);
+  background: rgba(0,0,0,0.65);
+  border: 2px solid #ff0033;
+  border-radius: 10px;
+  box-shadow: 0 0 18px rgba(255,0,51,0.45), inset 0 0 10px rgba(255,0,51,0.12);
+  overflow: hidden;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.aurora-scroll-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to top, #ff0033, #ff3366);
+  box-shadow: 0 0 8px #ff0033, 0 0 20px rgba(255,0,51,0.22), inset 0 0 6px rgba(255,0,51,0.18);
+  transition: height 0.12s linear;
+  border-radius: 6px;
+}
+
+.aurora-scroll-container.aurora-visible { opacity: 1; }
+
+/* Percent label aligned to vertical center of indicator */
+.aurora-scroll-percent {
+  position: fixed;
+  top: var(--indicator-top);
+  right: 54px;
+  transform: translateY(-50%);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  color: #ff0033;
+  text-shadow: 0 0 6px rgba(255,0,51,0.9);
+  background: rgba(0,0,0,0.55);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,0,51,0.12);
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+.aurora-scroll-percent.aurora-visible { opacity: 1; }
+
+@media (max-width: 420px) {
+  .aurora-scroll-container { right: 12px; width: 8px; height: clamp(140px, 40vh, 260px);}
+  .aurora-scroll-percent { right: 40px; font-size: 0.75rem; padding: 3px 6px; }
+}
+        
         /* === LED Digital Text – Border Merah Sederhana === */
         
 .led-container {
@@ -1640,6 +1702,12 @@ body.light-mode .cyber-toggle {
   </div>
 </div>
 
+<!--scroll indikator -->
+<div class="aurora-scroll-container" id="aurora_scroll_container">
+  <div class="aurora-scroll-bar" id="aurora_scroll_bar"></div>
+</div>
+<div class="aurora-scroll-percent" id="aurora_scroll_percent">0%</div>
+
 <!-- back to top -->
 <div class="back-to-top" id="backToTop"></div>
 
@@ -2286,6 +2354,67 @@ backToTopButton.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 });
+
+// scroll indikator //
+(function(){
+  const container = document.getElementById('aurora_scroll_container');
+  const bar = document.getElementById('aurora_scroll_bar');
+  const pct = document.getElementById('aurora_scroll_percent');
+  let hideTimer = null;
+  let raf = null;
+
+  function lockCenter() {
+    // Lock CSS var to actual center in pixels
+    const center = Math.round(window.innerHeight / 2);
+    document.documentElement.style.setProperty('--indicator-top', center + 'px');
+  }
+
+  function computePercent(){
+    const winH = window.innerHeight || document.documentElement.clientHeight;
+    const docH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    const p = (scrollTop / (docH - winH)) * 100;
+    return Math.min(100, Math.max(0, p));
+  }
+
+  function update(){
+    const p = computePercent();
+    bar.style.height = p + '%';
+    pct.textContent = Math.round(p) + '%';
+  }
+
+  function show(){
+    container.classList.add('aurora-visible');
+    pct.classList.add('aurora-visible');
+    if(hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{
+      container.classList.remove('aurora-visible');
+      pct.classList.remove('aurora-visible');
+    }, 2000);
+  }
+
+  function onScroll(){
+    if(raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=>{
+      update();
+      show();
+    });
+  }
+
+  function init(){
+    lockCenter();
+    update();
+    window.addEventListener('scroll', onScroll, {passive:true});
+    // lock again on orientation change
+    window.addEventListener('orientationchange', ()=> setTimeout(lockCenter, 300));
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>
 </body>
 </html>
